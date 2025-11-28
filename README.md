@@ -65,33 +65,28 @@ flowchart LR
 ### Project Structure
 
 ```mermaid
-flowchart TB
-    subgraph ROOT["project_name/"]
-        direction TB
-        subgraph SRC["src/"]
-            subgraph PKG["project_name/"]
-                INIT["__init__.py"]
-                MAIN["main.py"]
-                CLI["my_cli.py"]
-                RICH["rich_demo.py"]
-            end
-        end
-        subgraph TESTS["tests/"]
-            TEST["test_main.py"]
-        end
-        PYPROJ["pyproject.toml"]
-        PRECOMMIT[".pre-commit-config.yaml"]
-        README["README.md"]
-        GITIGNORE[".gitignore"]
-    end
+graph LR
+    subgraph Project["📁 project_name"]
+        direction LR
 
-    INIT ---|Package initialization| PKG
-    MAIN ---|Core application logic| PKG
-    CLI ---|Typer CLI interface| PKG
-    RICH ---|Rich terminal demos| PKG
-    TEST ---|Pytest test suite| TESTS
-    PYPROJ ---|Unified Python config| ROOT
-    PRECOMMIT ---|Git hooks config| ROOT
+        subgraph Source["src/project_name/"]
+            A["__init__.py<br/><i>Package init</i>"]
+            B["main.py<br/><i>Core logic</i>"]
+            C["my_cli.py<br/><i>CLI interface</i>"]
+            D["rich_demo.py<br/><i>Terminal UI</i>"]
+        end
+
+        subgraph Tests["tests/"]
+            E["test_main.py<br/><i>Test suite</i>"]
+        end
+
+        subgraph Config["Configuration"]
+            F["pyproject.toml<br/><i>Project config</i>"]
+            G[".pre-commit-config.yaml<br/><i>Git hooks</i>"]
+            H[".gitignore"]
+            I["README.md"]
+        end
+    end
 ```
 
 ---
@@ -156,36 +151,29 @@ pre-commit install --install-hooks
 ## 📦 Tool Stack
 
 ```mermaid
-flowchart TB
-    subgraph TOOLCHAIN["Modern Python Toolchain"]
-        direction LR
-        subgraph LINT["Linting & Formatting"]
-            RUFF[Ruff]
-        end
-        subgraph TYPE["Type Checking"]
-            MYPY[Mypy]
-        end
-        subgraph TEST["Testing"]
-            PYTEST[Pytest]
-        end
-        subgraph SEC["Security"]
-            BANDIT[Bandit]
-        end
+flowchart LR
+    CODE[Your Python Code]
+
+    CODE --> RUFF
+    CODE --> MYPY
+    CODE --> PYTEST
+    CODE --> BANDIT
+
+    subgraph Linting["🔍 Linting & Formatting"]
+        RUFF["<b>Ruff</b><br/>Replaces Black + isort + Flake8<br/>10-100x faster"]
     end
 
-    RUFF ---|Replaces Black, isort, Flake8| LINT
-    RUFF ---|10-100x faster| LINT
-    MYPY ---|Strict mode enabled| TYPE
-    MYPY ---|Full type inference| TYPE
-    PYTEST ---|Async & coverage support| TEST
-    PYTEST ---|Fixtures & parameterized| TEST
-    BANDIT ---|SAST scanning| SEC
-    BANDIT ---|OWASP compliance| SEC
+    subgraph Typing["🔷 Type Checking"]
+        MYPY["<b>Mypy</b><br/>Strict mode<br/>Full type inference"]
+    end
 
-    CODE[Your Code] -->|lint & format| RUFF
-    CODE -->|type check| MYPY
-    CODE -->|test| PYTEST
-    CODE -->|security scan| BANDIT
+    subgraph Testing["🧪 Testing"]
+        PYTEST["<b>Pytest</b><br/>Async support<br/>Coverage reports"]
+    end
+
+    subgraph Security["🔒 Security"]
+        BANDIT["<b>Bandit</b><br/>SAST scanning<br/>OWASP compliance"]
+    end
 ```
 
 ---
