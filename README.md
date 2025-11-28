@@ -34,51 +34,60 @@
 
 ## 🏗️ Architecture Overview
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                      DEVELOPMENT WORKFLOW                           │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    │
-│   │  Write   │───▶│  Save    │───▶│  Commit  │───▶│   Push   │    │
-│   │  Code    │    │  File    │    │  Changes │    │  to Repo │    │
-│   └──────────┘    └────┬─────┘    └────┬─────┘    └────┬─────┘    │
-│                        │               │               │           │
-│                        ▼               ▼               ▼           │
-│   ┌─────────────────────────────────────────────────────────────┐ │
-│   │                    AUTOMATED QUALITY GATES                   │ │
-│   ├─────────────────────────────────────────────────────────────┤ │
-│   │                                                              │ │
-│   │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────────────┐ │ │
-│   │  │  Ruff   │  │  Mypy   │  │ Bandit  │  │   Commitizen    │ │ │
-│   │  │ Lint +  │  │  Type   │  │Security │  │   Conventional  │ │ │
-│   │  │ Format  │  │  Check  │  │  Scan   │  │     Commits     │ │ │
-│   │  └─────────┘  └─────────┘  └─────────┘  └─────────────────┘ │ │
-│   │                                                              │ │
-│   └─────────────────────────────────────────────────────────────┘ │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
+### Development Workflow
 
-┌─────────────────────────────────────────────────────────────────────┐
-│                       PROJECT STRUCTURE                             │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   {{ cookiecutter.project_slug }}/                                  │
-│   ├── src/                                                          │
-│   │   └── {{ cookiecutter.project_slug }}/                          │
-│   │       ├── __init__.py      # Package initialization             │
-│   │       ├── main.py          # Core application logic             │
-│   │       ├── my_cli.py        # Typer CLI interface                │
-│   │       └── rich_demo.py     # Rich terminal UI examples          │
-│   │                                                                 │
-│   ├── tests/                                                        │
-│   │   └── test_main.py         # Pytest test suite                  │
-│   │                                                                 │
-│   ├── pyproject.toml           # Unified Python config              │
-│   ├── .pre-commit-config.yaml  # Git hooks configuration            │
-│   └── README.md                # Project documentation              │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph DEV["🖥️ Development"]
+        A["✏️ Write<br/>Code"] --> B["💾 Save<br/>File"]
+    end
+
+    subgraph VCS["📦 Version Control"]
+        B --> C["📝 Stage<br/>Changes"]
+        C --> D["✅ Commit"]
+        D --> E["🚀 Push<br/>to Remote"]
+    end
+
+    subgraph GATES["🛡️ Automated Quality Gates"]
+        direction TB
+        D -.-> G1["🔍 Ruff<br/>Lint + Format"]
+        D -.-> G2["🔷 Mypy<br/>Type Check"]
+        D -.-> G3["🔒 Bandit<br/>Security Scan"]
+        D -.-> G4["📋 Commitizen<br/>Conventional Commits"]
+    end
+
+    style DEV fill:#e1f5fe,stroke:#01579b
+    style VCS fill:#f3e5f5,stroke:#4a148c
+    style GATES fill:#fff3e0,stroke:#e65100
+```
+
+### Project Structure
+
+```mermaid
+flowchart TB
+    subgraph ROOT["📁 project_name/"]
+        direction TB
+        subgraph SRC["📂 src/"]
+            subgraph PKG["📂 project_name/"]
+                INIT["📄 __init__.py<br/><small>Package init</small>"]
+                MAIN["📄 main.py<br/><small>Core logic</small>"]
+                CLI["📄 my_cli.py<br/><small>Typer CLI</small>"]
+                RICH["📄 rich_demo.py<br/><small>Rich UI demos</small>"]
+            end
+        end
+        subgraph TESTS["📂 tests/"]
+            TEST["📄 test_main.py<br/><small>Pytest suite</small>"]
+        end
+        PYPROJ["📄 pyproject.toml<br/><small>Unified config</small>"]
+        PRECOMMIT["📄 .pre-commit-config.yaml<br/><small>Git hooks</small>"]
+        README["📄 README.md<br/><small>Documentation</small>"]
+        GITIGNORE["📄 .gitignore"]
+    end
+
+    style ROOT fill:#e8f5e9,stroke:#2e7d32
+    style SRC fill:#e3f2fd,stroke:#1565c0
+    style PKG fill:#fff8e1,stroke:#f9a825
+    style TESTS fill:#fce4ec,stroke:#c2185b
 ```
 
 ---
@@ -142,32 +151,50 @@ pre-commit install --install-hooks
 
 ## 📦 Tool Stack
 
-```
-┌────────────────────────────────────────────────────────────────┐
-│                     MODERN PYTHON TOOLCHAIN                    │
-├────────────────────────────────────────────────────────────────┤
-│                                                                │
-│  LINTING & FORMATTING          TYPE CHECKING                   │
-│  ┌────────────────────┐        ┌────────────────────┐         │
-│  │       RUFF         │        │       MYPY         │         │
-│  │  ─────────────────  │        │  ─────────────────  │         │
-│  │  • Replaces Black  │        │  • Strict mode     │         │
-│  │  • Replaces isort  │        │  • Type inference  │         │
-│  │  • Replaces Flake8 │        │  • Plugin support  │         │
-│  │  • 10-100x faster  │        │  • IDE integration │         │
-│  └────────────────────┘        └────────────────────┘         │
-│                                                                │
-│  TESTING                       SECURITY                        │
-│  ┌────────────────────┐        ┌────────────────────┐         │
-│  │      PYTEST        │        │      BANDIT        │         │
-│  │  ─────────────────  │        │  ─────────────────  │         │
-│  │  • Async support   │        │  • SAST scanning   │         │
-│  │  • Coverage report │        │  • OWASP checks    │         │
-│  │  • Fixtures        │        │  • CI integration  │         │
-│  │  • Parameterized   │        │  • Custom rules    │         │
-│  └────────────────────┘        └────────────────────┘         │
-│                                                                │
-└────────────────────────────────────────────────────────────────┘
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e8f5e9', 'primaryBorderColor': '#2e7d32'}}}%%
+flowchart TB
+    subgraph TOOLCHAIN["🐍 MODERN PYTHON TOOLCHAIN"]
+        direction TB
+        subgraph ROW1[" "]
+            direction LR
+            subgraph RUFF["🔍 RUFF<br/>Linting & Formatting"]
+                R1["✓ Replaces Black"]
+                R2["✓ Replaces isort"]
+                R3["✓ Replaces Flake8"]
+                R4["⚡ 10-100x faster"]
+            end
+            subgraph MYPY["🔷 MYPY<br/>Type Checking"]
+                M1["✓ Strict mode"]
+                M2["✓ Type inference"]
+                M3["✓ Plugin support"]
+                M4["✓ IDE integration"]
+            end
+        end
+        subgraph ROW2[" "]
+            direction LR
+            subgraph PYTEST["🧪 PYTEST<br/>Testing"]
+                P1["✓ Async support"]
+                P2["✓ Coverage report"]
+                P3["✓ Fixtures"]
+                P4["✓ Parameterized"]
+            end
+            subgraph BANDIT["🔒 BANDIT<br/>Security"]
+                B1["✓ SAST scanning"]
+                B2["✓ OWASP checks"]
+                B3["✓ CI integration"]
+                B4["✓ Custom rules"]
+            end
+        end
+    end
+
+    style TOOLCHAIN fill:#fafafa,stroke:#424242
+    style RUFF fill:#d7ff64,stroke:#827717
+    style MYPY fill:#bbdefb,stroke:#1565c0
+    style PYTEST fill:#fff9c4,stroke:#f9a825
+    style BANDIT fill:#ffcdd2,stroke:#c62828
+    style ROW1 fill:transparent,stroke:transparent
+    style ROW2 fill:transparent,stroke:transparent
 ```
 
 ---
@@ -207,32 +234,34 @@ dev = [
 
 ## 🔄 Development Workflow
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    COMMIT LIFECYCLE                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   git add .                                                 │
-│       │                                                     │
-│       ▼                                                     │
-│   git commit -m "feat: add feature"                         │
-│       │                                                     │
-│       ▼                                                     │
-│   ┌─────────────────────────────────────────────────────┐  │
-│   │              PRE-COMMIT HOOKS RUN                    │  │
-│   ├─────────────────────────────────────────────────────┤  │
-│   │  1. ruff check --fix        (auto-fix lint issues)  │  │
-│   │  2. ruff format             (format code)           │  │
-│   │  3. mypy                    (type check)            │  │
-│   │  4. bandit                  (security scan)         │  │
-│   │  5. commitizen              (validate message)      │  │
-│   └─────────────────────────────────────────────────────┘  │
-│       │                                                     │
-│       ▼                                                     │
-│   ✅ Commit succeeds (all checks pass)                      │
-│   ❌ Commit blocked (fix issues and retry)                  │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    A["📝 <b>git add .</b><br/><small>Stage changes</small>"] --> B["💬 <b>git commit -m 'feat: ...'</b><br/><small>Create commit</small>"]
+
+    B --> HOOKS
+
+    subgraph HOOKS["🔗 PRE-COMMIT HOOKS"]
+        direction TB
+        H1["1️⃣ <b>ruff check --fix</b><br/><small>Auto-fix lint issues</small>"]
+        H2["2️⃣ <b>ruff format</b><br/><small>Format code</small>"]
+        H3["3️⃣ <b>mypy</b><br/><small>Type check</small>"]
+        H4["4️⃣ <b>bandit</b><br/><small>Security scan</small>"]
+        H5["5️⃣ <b>commitizen</b><br/><small>Validate message</small>"]
+        H1 --> H2 --> H3 --> H4 --> H5
+    end
+
+    HOOKS --> CHECK{All Checks<br/>Pass?}
+
+    CHECK -->|"✅ Yes"| SUCCESS["🎉 <b>Commit Succeeds</b><br/><small>Changes recorded</small>"]
+    CHECK -->|"❌ No"| FAIL["🔧 <b>Commit Blocked</b><br/><small>Fix issues & retry</small>"]
+    FAIL --> A
+
+    style A fill:#e3f2fd,stroke:#1565c0
+    style B fill:#e3f2fd,stroke:#1565c0
+    style HOOKS fill:#fff3e0,stroke:#e65100
+    style CHECK fill:#f3e5f5,stroke:#7b1fa2
+    style SUCCESS fill:#e8f5e9,stroke:#2e7d32
+    style FAIL fill:#ffebee,stroke:#c62828
 ```
 
 ### Commands Reference
