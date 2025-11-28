@@ -4,7 +4,7 @@
 
 ### Modern Python Project Template | Cookiecutter | Best Practices | Production-Ready
 
-[![Python](https://img.shields.io/badge/Python-{{ cookiecutter.python_version }}+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Ruff](https://img.shields.io/badge/Linter-Ruff-D7FF64?style=for-the-badge&logo=ruff&logoColor=black)](https://github.com/astral-sh/ruff)
 [![Pre-commit](https://img.shields.io/badge/Pre--commit-Enabled-brightgreen?style=for-the-badge&logo=pre-commit&logoColor=white)](https://pre-commit.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
@@ -38,56 +38,60 @@
 
 ```mermaid
 flowchart LR
-    subgraph DEV["🖥️ Development"]
-        A["✏️ Write<br/>Code"] --> B["💾 Save<br/>File"]
+    subgraph DEV["Development Phase"]
+        A[Write Code] -->|save| B[Save File]
     end
 
-    subgraph VCS["📦 Version Control"]
-        B --> C["📝 Stage<br/>Changes"]
-        C --> D["✅ Commit"]
-        D --> E["🚀 Push<br/>to Remote"]
+    subgraph VCS["Version Control"]
+        B -->|stage| C[Stage Changes]
+        C -->|commit| D[Commit]
+        D -->|push| E[Push to Remote]
     end
 
-    subgraph GATES["🛡️ Automated Quality Gates"]
+    subgraph GATES["Quality Gates"]
         direction TB
-        D -.-> G1["🔍 Ruff<br/>Lint + Format"]
-        D -.-> G2["🔷 Mypy<br/>Type Check"]
-        D -.-> G3["🔒 Bandit<br/>Security Scan"]
-        D -.-> G4["📋 Commitizen<br/>Conventional Commits"]
+        G1[Ruff - Lint & Format]
+        G2[Mypy - Type Check]
+        G3[Bandit - Security Scan]
+        G4[Commitizen - Commit Validation]
     end
 
-    style DEV fill:#e1f5fe,stroke:#01579b
-    style VCS fill:#f3e5f5,stroke:#4a148c
-    style GATES fill:#fff3e0,stroke:#e65100
+    D -.->|triggers| G1
+    D -.->|triggers| G2
+    D -.->|triggers| G3
+    D -.->|triggers| G4
 ```
 
 ### Project Structure
 
 ```mermaid
 flowchart TB
-    subgraph ROOT["📁 project_name/"]
+    subgraph ROOT["project_name/"]
         direction TB
-        subgraph SRC["📂 src/"]
-            subgraph PKG["📂 project_name/"]
-                INIT["📄 __init__.py<br/><small>Package init</small>"]
-                MAIN["📄 main.py<br/><small>Core logic</small>"]
-                CLI["📄 my_cli.py<br/><small>Typer CLI</small>"]
-                RICH["📄 rich_demo.py<br/><small>Rich UI demos</small>"]
+        subgraph SRC["src/"]
+            subgraph PKG["project_name/"]
+                INIT["__init__.py"]
+                MAIN["main.py"]
+                CLI["my_cli.py"]
+                RICH["rich_demo.py"]
             end
         end
-        subgraph TESTS["📂 tests/"]
-            TEST["📄 test_main.py<br/><small>Pytest suite</small>"]
+        subgraph TESTS["tests/"]
+            TEST["test_main.py"]
         end
-        PYPROJ["📄 pyproject.toml<br/><small>Unified config</small>"]
-        PRECOMMIT["📄 .pre-commit-config.yaml<br/><small>Git hooks</small>"]
-        README["📄 README.md<br/><small>Documentation</small>"]
-        GITIGNORE["📄 .gitignore"]
+        PYPROJ["pyproject.toml"]
+        PRECOMMIT[".pre-commit-config.yaml"]
+        README["README.md"]
+        GITIGNORE[".gitignore"]
     end
 
-    style ROOT fill:#e8f5e9,stroke:#2e7d32
-    style SRC fill:#e3f2fd,stroke:#1565c0
-    style PKG fill:#fff8e1,stroke:#f9a825
-    style TESTS fill:#fce4ec,stroke:#c2185b
+    INIT ---|Package initialization| PKG
+    MAIN ---|Core application logic| PKG
+    CLI ---|Typer CLI interface| PKG
+    RICH ---|Rich terminal demos| PKG
+    TEST ---|Pytest test suite| TESTS
+    PYPROJ ---|Unified Python config| ROOT
+    PRECOMMIT ---|Git hooks config| ROOT
 ```
 
 ---
@@ -122,7 +126,7 @@ flowchart TB
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python {{ cookiecutter.python_version }}+
+- Python 3.11+
 - [Cookiecutter](https://cookiecutter.readthedocs.io/) (`pip install cookiecutter`)
 
 ### Generate Your Project
@@ -152,49 +156,36 @@ pre-commit install --install-hooks
 ## 📦 Tool Stack
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e8f5e9', 'primaryBorderColor': '#2e7d32'}}}%%
 flowchart TB
-    subgraph TOOLCHAIN["🐍 MODERN PYTHON TOOLCHAIN"]
-        direction TB
-        subgraph ROW1[" "]
-            direction LR
-            subgraph RUFF["🔍 RUFF<br/>Linting & Formatting"]
-                R1["✓ Replaces Black"]
-                R2["✓ Replaces isort"]
-                R3["✓ Replaces Flake8"]
-                R4["⚡ 10-100x faster"]
-            end
-            subgraph MYPY["🔷 MYPY<br/>Type Checking"]
-                M1["✓ Strict mode"]
-                M2["✓ Type inference"]
-                M3["✓ Plugin support"]
-                M4["✓ IDE integration"]
-            end
+    subgraph TOOLCHAIN["Modern Python Toolchain"]
+        direction LR
+        subgraph LINT["Linting & Formatting"]
+            RUFF[Ruff]
         end
-        subgraph ROW2[" "]
-            direction LR
-            subgraph PYTEST["🧪 PYTEST<br/>Testing"]
-                P1["✓ Async support"]
-                P2["✓ Coverage report"]
-                P3["✓ Fixtures"]
-                P4["✓ Parameterized"]
-            end
-            subgraph BANDIT["🔒 BANDIT<br/>Security"]
-                B1["✓ SAST scanning"]
-                B2["✓ OWASP checks"]
-                B3["✓ CI integration"]
-                B4["✓ Custom rules"]
-            end
+        subgraph TYPE["Type Checking"]
+            MYPY[Mypy]
+        end
+        subgraph TEST["Testing"]
+            PYTEST[Pytest]
+        end
+        subgraph SEC["Security"]
+            BANDIT[Bandit]
         end
     end
 
-    style TOOLCHAIN fill:#fafafa,stroke:#424242
-    style RUFF fill:#d7ff64,stroke:#827717
-    style MYPY fill:#bbdefb,stroke:#1565c0
-    style PYTEST fill:#fff9c4,stroke:#f9a825
-    style BANDIT fill:#ffcdd2,stroke:#c62828
-    style ROW1 fill:transparent,stroke:transparent
-    style ROW2 fill:transparent,stroke:transparent
+    RUFF ---|Replaces Black, isort, Flake8| LINT
+    RUFF ---|10-100x faster| LINT
+    MYPY ---|Strict mode enabled| TYPE
+    MYPY ---|Full type inference| TYPE
+    PYTEST ---|Async & coverage support| TEST
+    PYTEST ---|Fixtures & parameterized| TEST
+    BANDIT ---|SAST scanning| SEC
+    BANDIT ---|OWASP compliance| SEC
+
+    CODE[Your Code] -->|lint & format| RUFF
+    CODE -->|type check| MYPY
+    CODE -->|test| PYTEST
+    CODE -->|security scan| BANDIT
 ```
 
 ---
@@ -236,32 +227,30 @@ dev = [
 
 ```mermaid
 flowchart TD
-    A["📝 <b>git add .</b><br/><small>Stage changes</small>"] --> B["💬 <b>git commit -m 'feat: ...'</b><br/><small>Create commit</small>"]
+    A[git add .] -->|stage changes| B[git commit]
 
-    B --> HOOKS
+    B -->|triggers| HOOKS
 
-    subgraph HOOKS["🔗 PRE-COMMIT HOOKS"]
+    subgraph HOOKS["Pre-commit Hooks"]
         direction TB
-        H1["1️⃣ <b>ruff check --fix</b><br/><small>Auto-fix lint issues</small>"]
-        H2["2️⃣ <b>ruff format</b><br/><small>Format code</small>"]
-        H3["3️⃣ <b>mypy</b><br/><small>Type check</small>"]
-        H4["4️⃣ <b>bandit</b><br/><small>Security scan</small>"]
-        H5["5️⃣ <b>commitizen</b><br/><small>Validate message</small>"]
-        H1 --> H2 --> H3 --> H4 --> H5
+        H1[ruff check --fix]
+        H2[ruff format]
+        H3[mypy]
+        H4[bandit]
+        H5[commitizen]
+        H1 -->|auto-fix lint| H2
+        H2 -->|format code| H3
+        H3 -->|type check| H4
+        H4 -->|security scan| H5
+        H5 -->|validate message| DONE[Hooks Complete]
     end
 
-    HOOKS --> CHECK{All Checks<br/>Pass?}
+    HOOKS --> CHECK{All Checks Pass?}
 
-    CHECK -->|"✅ Yes"| SUCCESS["🎉 <b>Commit Succeeds</b><br/><small>Changes recorded</small>"]
-    CHECK -->|"❌ No"| FAIL["🔧 <b>Commit Blocked</b><br/><small>Fix issues & retry</small>"]
-    FAIL --> A
-
-    style A fill:#e3f2fd,stroke:#1565c0
-    style B fill:#e3f2fd,stroke:#1565c0
-    style HOOKS fill:#fff3e0,stroke:#e65100
-    style CHECK fill:#f3e5f5,stroke:#7b1fa2
-    style SUCCESS fill:#e8f5e9,stroke:#2e7d32
-    style FAIL fill:#ffebee,stroke:#c62828
+    CHECK -->|yes| SUCCESS[Commit Succeeds]
+    CHECK -->|no| FAIL[Commit Blocked]
+    FAIL -->|fix issues| A
+    SUCCESS -->|optional| PUSH[git push]
 ```
 
 ### Commands Reference
